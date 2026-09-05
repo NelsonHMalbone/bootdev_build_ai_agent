@@ -9,7 +9,7 @@ def main():
     api_key = os.environ.get("OPENROUTER_API_KEY")
 
     if api_key is None:
-        raise RuntimeError("ran out of time")
+        raise RuntimeError("ran out of time for apikey")
 
     client = OpenAI(base_url='https://openrouter.ai/api/v1',
                     api_key=api_key)
@@ -24,6 +24,15 @@ def main():
         ],
     )
 
+    if response.usage is None:
+        raise RuntimeError("ran out of time for response usage")
+    else:
+        prompt_tokens = response.usage.prompt_tokens
+        response_tokens = response.usage.prompt_tokens
+
     print(response.choices[0].message.content)
+    print(f"Prompt tokens: {prompt_tokens}")
+    print(f"Response tokens: {response_tokens}")
+
 if __name__ == "__main__":
     main()
