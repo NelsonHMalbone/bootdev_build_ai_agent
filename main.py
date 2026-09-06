@@ -19,6 +19,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
     # Now we can access `args.user_prompt`
 
@@ -35,11 +36,15 @@ def main():
         raise RuntimeError("ran out of time for response usage")
     else:
         prompt_tokens = response.usage.prompt_tokens
-        response_tokens = response.usage.prompt_tokens
+        response_tokens = response.usage.completion_tokens
+
+    if args.verbose:
+        print(f"User prompt: {args.user_prompt}")
+        print(f"Prompt tokens: {prompt_tokens}")
+        print(f"Response tokens: {response_tokens}")
 
     print(response.choices[0].message.content)
-    print(f"Prompt tokens: {prompt_tokens}")
-    print(f"Response tokens: {response_tokens}")
+
 
 if __name__ == "__main__":
     main()
