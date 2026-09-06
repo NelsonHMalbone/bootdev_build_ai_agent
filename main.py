@@ -1,4 +1,6 @@
 import os
+from pyexpat.errors import messages
+
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
@@ -20,14 +22,13 @@ def main():
     args = parser.parse_args()
     # Now we can access `args.user_prompt`
 
+    messages = [
+        {"role": "user", "content": args.user_prompt},
+    ]
+
     response = client.chat.completions.create(
         model="openrouter/free",
-        messages=[
-            {
-                "role": "user",
-                "content": args.user_prompt,
-            }
-        ],
+        messages=messages,
     )
 
     if response.usage is None:
