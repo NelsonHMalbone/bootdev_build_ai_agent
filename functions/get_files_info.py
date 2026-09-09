@@ -1,5 +1,4 @@
 import os
-from logging import raiseExceptions
 
 
 def get_files_info(working_directory: str, directory: str = ".") -> str:
@@ -16,6 +15,16 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
         if not os.path.isdir(target_dir):
             return f'Error: "{directory}" is not a directory'
         else:
-            return f'Success: "{directory}" is within the working directory'
+            results = []
+            items = os.listdir(target_dir)
+            for item in items:
+                file_name = os.path.join(target_dir, item)
+                file_name_results = os.path.getsize(file_name)
+                results.append(f'- {item}: file_size={file_name_results} bytes, is_dir={os.path.isdir(file_name)}')
+
+            return "\n".join(results)
+
     except Exception as e:
+
         return f"Error: {e}"
+
