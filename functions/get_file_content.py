@@ -27,3 +27,20 @@ def get_file_content(working_directory: str, file_path: str) -> str:
 
         return f"Error: {e}"
 
+# tells the LLM how the function should be called
+schema_get_files_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "gather all content from file",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Directory path to list files from, gathers file content and gets maxs chars",
+                },
+            },
+        },
+    },
+}

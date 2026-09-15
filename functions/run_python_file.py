@@ -43,7 +43,24 @@ def run_python_file(
 
         return "\n".join(output)
 
-
-
     except Exception as e:
         return f"Error: {e}"
+
+
+# tells the LLM how the function should be called
+schema_run_python_file = {
+    "type": "function",
+    "function": {
+        "name": "run_python_file",
+        "description": "makes sure it is a python file",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "directory": {
+                    "type": "string",
+                    "description": "Directory path to list files from, determines to see if its a python file then runs it",
+                },
+            },
+        },
+    },
+}

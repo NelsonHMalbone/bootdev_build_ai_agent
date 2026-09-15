@@ -27,3 +27,21 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
     except Exception as e:
 
         return f"Error: {e}"
+
+# tells the LLM how the function should be called
+schema_write_file = {
+    "type": "function",
+    "function": {
+        "name": "write_file",
+        "description": "writes file and gathers length of content that was wrote inside of file",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "directory": {
+                    "type": "string",
+                    "description": "Directory path to list files from, gathers file content writes to file and gets length of content",
+                },
+            },
+        },
+    },
+}
