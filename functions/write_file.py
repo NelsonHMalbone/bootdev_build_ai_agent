@@ -33,15 +33,20 @@ schema_write_file = {
     "type": "function",
     "function": {
         "name": "write_file",
-        "description": "writes file and gathers length of content that was wrote inside of file",
+        "description": "Writes text content to a specified file, overwriting it if it already exists.",
         "parameters": {
             "type": "object",
             "properties": {
-                "directory": {
+                "file_path": {
                     "type": "string",
-                    "description": "Directory path to list files from, gathers file content writes to file and gets length of content",
+                    "description": "Path to the file to write, relative to the working directory.",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "Text content to write into the file.",
                 },
             },
+            "required": ["file_path", "content"],
         },
     },
 }

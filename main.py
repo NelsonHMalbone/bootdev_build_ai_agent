@@ -3,7 +3,7 @@ import json
 import argparse
 
 from prompts import system_prompt
-from call_function import available_functions
+from call_function import available_functions, call_function
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -58,9 +58,14 @@ def main():
         print(message.content)
     else:
         for tool_call in message.tool_calls:
-            function_args = json.loads(tool_call.function.arguments or "{}")
-            print(f"Calling function: {tool_call.function.name}({function_args})")
+            result_message = call_function(tool_call, verbose=args.verbose)
+            # checks if empty or missing, and stops the program with an error
+            if not result_message["content"]:
+                raise Exception("no content returned")
 
+            # only prints the actual result content when --verbose is passed
+            if args.verbose:
+                print(f"-> {result_message['content']}")
 
 if __name__ == "__main__":
     main()
