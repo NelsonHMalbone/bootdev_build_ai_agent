@@ -31,34 +31,37 @@ def main():
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": args.user_prompt},
     ]
+    for _ in range(0, 20):
+        response = client.chat.completions.create(
+            model="openrouter/free",
+            messages=messages,
+            tools=available_functions,
+            temperature=0,
 
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        messages=messages,
-        tools=available_functions,
-        temperature=0,
+        )
 
-    )
+        if response.usage is None:
+            raise RuntimeError("ran out of time for response usage")
+        else:
+            prompt_tokens = response.usage.prompt_tokens
+            response_tokens = response.usage.completion_tokens
 
-    if response.usage is None:
-        raise RuntimeError("ran out of time for response usage")
-    else:
-        prompt_tokens = response.usage.prompt_tokens
-        response_tokens = response.usage.completion_tokens
+        if args.verbose:
+            print(f"User prompt: {args.user_prompt}")
+            print(f"Prompt tokens: {prompt_tokens}")
+            print(f"Response tokens: {response_tokens}")
 
-    if args.verbose:
-        print(f"User prompt: {args.user_prompt}")
-        print(f"Prompt tokens: {prompt_tokens}")
-        print(f"Response tokens: {response_tokens}")
+        #print(response.choices[0].message.content)
+        message = response.choices[0].message
+        messages.append(message)
 
-    #print(response.choices[0].message.content)
-    message = response.choices[0].message
+        if message.tool_calls is None:
+            print(message.content)
+            break
 
-    if message.tool_calls is None:
-        print(message.content)
-    else:
         for tool_call in message.tool_calls:
             result_message = call_function(tool_call, verbose=args.verbose)
+            messages.append(result_message)
             # checks if empty or missing, and stops the program with an error
             if not result_message["content"]:
                 raise Exception("no content returned")
@@ -66,6 +69,11 @@ def main():
             # only prints the actual result content when --verbose is passed
             if args.verbose:
                 print(f"-> {result_message['content']}")
+
+    else:
+        print("Maximum of iterations has been reached for the day")
+        exit(code=1)
+
 
 if __name__ == "__main__":
     main()
