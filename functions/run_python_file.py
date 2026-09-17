@@ -60,6 +60,13 @@ schema_run_python_file = {
                     "type": "string",
                     "description": "The path to the file, relative to the working directory.",
                 },
+                "args":{
+                    "type": "array",
+                    "items": {
+                        "type":"string"
+                    },
+                    "description": "a list of command-line arguments to pass to the script when running it"
+                },
             },
         },
     },
